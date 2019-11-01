@@ -4,46 +4,54 @@ class FromValidator {
 
     this.params = params
 
-    // this.$title = document.getElementsByName('title')[0];
-    // this.$desc = document.getElementsByName('text-area')[0];
+    this.$title = document.getElementsByName('title')[0];
+    this.$desc = document.getElementsByName('text-area')[0];
     this.$btn = document.getElementsByName('btn')[0];
     this.$errorsField = document.getElementsByClassName('error-msg')[0];
     this.$btn.disabled = 'true';
+    this.titleStr = this.$title.value
+    this.descStr = this.$desc.value
     this.errors = [] 
     this.handleEvent()
   }
 
   handleEvent() {
-    const self = this
 
-    this.params.forEach(function(element) {
-      const target = element.$target
-      target.addEventListener('keyup', function() {
-        self.displayErrors()
-      }) 
+    const self = this
+    this.$title.addEventListener("keyup", function(){
+      self.displayErrors()
+    })
+    this.$desc.addEventListener("keyup", function(){
+      self.displayErrors()
     })
   }
 
   valid() {
     this.errors = []
-    const self = this
-    this.params.forEach(function(element) {
-      const text = element.$target.value;
-      if (text.length < element.minLength) {
-        self.errors.push(`${element.caption}は${element.minLength}文字以上で入力してください`)
-      } else if (text.length > element.maxLength) {
-        self.errors.push(`${element.caption}は${element.maxLength}文字以下で入力してください`)
-      }       
-    })
-    return this.errors.length === 0
+
+    this.titleStr = this.$title.value
+    this.descStr = this.$desc.value
+
+    if (this.titleStr.length < this.params.title.minLength) {
+      this.errors.push(`タイトルは${this.params.title.minLength}文字以上で入力してください`)
+    } else if (this.titleStr.length > this.params.title.maxLength) {
+      this.errors.push(`タイトルは${this.params.title.maxLength}文字以下で入力してください`)
+    } 
     
+    if (this.descStr.length < this.params.desc.minLength) {
+      this.errors.push(`本文は${this.params.desc.minLength}文字以上で入力してください`)
+    } else if(this.descStr.length > this.params.desc.maxLength) {
+      this.errors.push(`本文は${this.params.desc.maxLength}文字以下で入力してください`)
+    }
+
+    return this.errors.length === 0
   } 
 
   displayErrors() {
     const self = this;
     this.$errorsField.innerHTML = ''
     if(!this.valid()) {
-      this.errors.forEach(function(element) {
+      this.errors.forEach(function(element, index) {
         const li = document.createElement('li')
         li.textContent = element
         self.$errorsField.appendChild(li)
@@ -55,22 +63,16 @@ class FromValidator {
   }
 } 
 
-
-
-const params = [
-  { 
-    $target: document.getElementsByName('title')[0], 
-    caption: 'タイトル',
-    maxLength: 10, 
+const params = {
+  title: {
+    maxLength: 10,
     minLength: 3
   },
-  { 
-    $target: document.getElementsByName('text-area')[0], 
-    caption: '本文',
+  desc: {
     maxLength: 20,
     minLength: 10
-  },
-]
+  } 
+}
 
 new FromValidator(params)
 // const titleConfig = {
