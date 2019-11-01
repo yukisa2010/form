@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <title>問い合わせ</title>
+    <style>
+    
+    label {
+      display: block;
+      width: 90px;
+    }
+    
+    </style>
+  </head>
+  <body>
+      <div> 
+        <ul class="error-msg">
+        </ul>
+      </div>
+
+      <form action="">
+      <label for="weather">天気</label>
+        <select name="weather">
+          <option></option>
+          <option>はれ</option>
+          <option>くもり</option>
+          <option>あめ</option>
+        </select>
+      <label for="title">タイトル</label><input type="text" name="title" value=""/><br/>
+      <label for="text-area">本文</label><textarea name="text-area" value=""></textarea><br/>
+      <input type="submit" value="Submit" name="btn" />
+    </form>
+    <script type="text/javascript" src="./index.js"></script>
+    <!-- <script type="text/javascript" src="./module_pattern.js"></script> -->
+  </body>
+</html>
