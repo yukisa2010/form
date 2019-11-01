@@ -1,16 +1,6 @@
 
 class FromValidator {
-  constructor() {
-    this.config = {
-      title: {
-        maxLength: 10,
-        minLength: 3
-      },
-      desc: {
-        maxLength: 20,
-        minLength: 10
-      } 
-    }
+  constructor(params) {
 
     this.$title = document.getElementsByName('title')[0];
     this.$desc = document.getElementsByName('text-area')[0];
@@ -71,7 +61,18 @@ class FromValidator {
   }
 } 
 
-new FromValidator()
+const params = {
+  title: {
+    maxLength: 10,
+    minLength: 3
+  },
+  desc: {
+    maxLength: 20,
+    minLength: 10
+  } 
+}
+
+new FromValidator(params)
 // const titleConfig = {
 //   name: 'title',
 //   min: {
