@@ -7,6 +7,7 @@ class FromValidator {
     // this.$title = document.getElementsByName('title')[0];
     // this.$desc = document.getElementsByName('text-area')[0];
     this.$btn = document.getElementsByName('btn')[0];
+    this.$weather = document.getElementsByName('weather')[0]
     this.$errorsField = document.getElementsByClassName('error-msg')[0];
     this.$btn.disabled = 'true';
     this.errors = [] 
@@ -22,11 +23,21 @@ class FromValidator {
         self.displayErrors()
       }) 
     })
+
+    this.$weather.addEventListener('change', function() {
+      self.displayErrors()
+    })
   }
 
   valid() {
     this.errors = []
     const self = this
+
+    const strWeather = this.$weather.value
+    if (strWeather === '') {
+      this.errors.push(`天気が選択されていません`)
+    }
+
     this.params.forEach(function(element) {
       const text = element.$target.value;
       if (text.length < element.minLength) {
@@ -35,6 +46,8 @@ class FromValidator {
         self.errors.push(`${element.caption}は${element.maxLength}文字以下で入力してください`)
       }       
     })
+    
+    
     return this.errors.length === 0
     
   } 
