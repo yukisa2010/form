@@ -22,58 +22,58 @@ const FromValidator = (function(){
 
   let errors = [];
   $btn.disabled = 'true';
+
+  function valid() {
+    errors = []
+
+    //天気のvalidation
+    const strWeather = $weather.value
+    if (strWeather === '') {
+      errors.push(`天気が選択されていません`)
+    }
+
+    //textbox, textareaのvalidation
+    params.forEach(function(element) {
+      const text = element.$target.value;
+      if (text.length < element.minLength) {
+        errors.push(`${element.caption}は${element.minLength}文字以上で入力してください`)
+      } else if (text.length > element.maxLength) {
+        errors.push(`${element.caption}は${element.maxLength}文字以下で入力してください`)
+      }       
+    })
+
+    //返り値boolean
+    return errors.length === 0
+    
+  }
+  function displayErrors() {
+    $errorsField.innerHTML = ''
+    if(!valid()) {
+      errors.forEach(function(element) {
+        const li = document.createElement('li')
+        li.textContent = element
+        $errorsField.appendChild(li)
+      });
+      $btn.disabled = 'true';
+    } else {
+      $btn.disabled = '';
+    }
+  }
+
   return {
-    handleEvent:function() {
+    handleEvent: function() {
       const self = this
       params.forEach(function(element) {
         const target = element.$target
         target.addEventListener('keyup', function() {
-          self.displayErrors()
+          displayErrors()
         }) 
       });
 
       $weather.addEventListener('change', function() {
-        self.displayErrors()
+        displayErrors()
       })
-    },
-    valid: function() {
-      errors = []
-
-      //天気のvalidation
-      const strWeather = $weather.value
-      if (strWeather === '') {
-        errors.push(`天気が選択されていません`)
-      }
-  
-      //textbox, textareaのvalidation
-      params.forEach(function(element) {
-        const text = element.$target.value;
-        if (text.length < element.minLength) {
-          errors.push(`${element.caption}は${element.minLength}文字以上で入力してください`)
-        } else if (text.length > element.maxLength) {
-          errors.push(`${element.caption}は${element.maxLength}文字以下で入力してください`)
-        }       
-      })
-
-      //返り値boolean
-      return errors.length === 0
-      
-    } ,
-    displayErrors: function() {
-      $errorsField.innerHTML = ''
-      if(!this.valid()) {
-        errors.forEach(function(element) {
-          const li = document.createElement('li')
-          li.textContent = element
-          $errorsField.appendChild(li)
-        });
-        $btn.disabled = 'true';
-      } else {
-        $btn.disabled = '';
-      }
     }
-      
-
   }
 })(params)
 
