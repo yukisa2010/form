@@ -17,12 +17,23 @@ class FromValidator {
   handleEvent() {
     const self = this
 
-    this.params.forEach(function(element) {
-      const target = element.$target
-      const strEvent = element.event
-      target.addEventListener(strEvent, function() {
-        self.displayErrors()
-      })
+    this.params.forEach(function(obj) {
+      const $el = obj.$target,
+            type = obj.type,
+            callback = function() {
+              self.displayErrors()
+            }
+      
+      switch(type) {
+        case 'text-box': 
+          $el.addEventListener('keyup', callback)
+          break;
+        case 'select':
+          $el.addEventListener('change', callback)
+          break;
+        default:
+      }
+      
     })
   }
 
@@ -32,19 +43,16 @@ class FromValidator {
 
     this.params.forEach(function(element) {
       const text = element.$target.value;
-      const type = element.$target.getAttribute('data-type')
+      const type = element.type
       const label = element.caption
 
       switch(type) {
         case 'select':
-
           if (text === '') {
             self.errors.push(`${label}が選択されていません`)
           }
           break; 
-
         case 'text-box':
-
           if (text.length < element.minLength) {
             self.errors.push(`${label}は${element.minLength}文字以上で入力してください`)
           } else if (text.length > element.maxLength) {
@@ -88,20 +96,20 @@ const params = [
     caption: 'タイトル',
     maxLength: 10, 
     minLength: 3,
-    event: 'keyup'
+    type: 'text-box'
   },
   { 
     $target: document.getElementsByName('text-area')[0], 
     caption: '本文',
     maxLength: 20,
     minLength: 10,
-    event: 'keyup'
+    type: 'text-box'
   },
   {
     $target: document.getElementsByName('weather')[0],
     caption: "天気",
     require: true,
-    event: 'change'
+    type: 'select'
   }
 ]
 
