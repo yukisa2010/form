@@ -1,13 +1,13 @@
+//Fragmentの設定
+//引数によるSwitch
+
 
 class FromValidator {
   constructor(params) {
 
     this.params = params
 
-    // this.$title = document.getElementsByName('title')[0];
-    // this.$desc = document.getElementsByName('text-area')[0];
     this.$btn = document.getElementsByName('btn')[0];
-    this.$weather = document.getElementsByName('weather')[0]
     this.$errorsField = document.getElementsByClassName('error-msg')[0];
     this.$btn.disabled = 'true';
     this.errors = [] 
@@ -19,13 +19,10 @@ class FromValidator {
 
     this.params.forEach(function(element) {
       const target = element.$target
-      target.addEventListener('keyup', function() {
+      const strEvent = element.event
+      target.addEventListener(strEvent, function() {
         self.displayErrors()
-      }) 
-    })
-
-    this.$weather.addEventListener('change', function() {
-      self.displayErrors()
+      })
     })
   }
 
@@ -33,34 +30,49 @@ class FromValidator {
     this.errors = []
     const self = this
 
-    const strWeather = this.$weather.value
-    if (strWeather === '') {
-      this.errors.push(`天気が選択されていません`)
-    }
-
     this.params.forEach(function(element) {
       const text = element.$target.value;
-      if (text.length < element.minLength) {
-        self.errors.push(`${element.caption}は${element.minLength}文字以上で入力してください`)
-      } else if (text.length > element.maxLength) {
-        self.errors.push(`${element.caption}は${element.maxLength}文字以下で入力してください`)
-      }       
+      const type = element.$target.getAttribute('data-type')
+      const label = element.caption
+
+      switch(type) {
+        case 'select':
+
+          if (text === '') {
+            self.errors.push(`${label}が選択されていません`)
+          }
+          break; 
+
+        case 'text-box':
+
+          if (text.length < element.minLength) {
+            self.errors.push(`${label}は${element.minLength}文字以上で入力してください`)
+          } else if (text.length > element.maxLength) {
+            self.errors.push(`${label}は${element.maxLength}文字以下で入力してください`)
+          }       
+          break;
+
+        default:
+      }
+
     })
-    
-    
     return this.errors.length === 0
-    
   } 
 
   displayErrors() {
     const self = this;
     this.$errorsField.innerHTML = ''
     if(!this.valid()) {
+      const fragment = document.createDocumentFragment()
+
       this.errors.forEach(function(element) {
         const li = document.createElement('li')
         li.textContent = element
-        self.$errorsField.appendChild(li)
+        fragment.appendChild(li)
       });
+
+      self.$errorsField.appendChild(fragment)
+
       this.$btn.disabled = 'true';
     } else {
       this.$btn.disabled = '';
@@ -75,15 +87,24 @@ const params = [
     $target: document.getElementsByName('title')[0], 
     caption: 'タイトル',
     maxLength: 10, 
-    minLength: 3
+    minLength: 3,
+    event: 'keyup'
   },
   { 
     $target: document.getElementsByName('text-area')[0], 
     caption: '本文',
     maxLength: 20,
-    minLength: 10
+    minLength: 10,
+    event: 'keyup'
   },
+  {
+    $target: document.getElementsByName('weather')[0],
+    caption: "天気",
+    require: true,
+    event: 'change'
+  }
 ]
+
 
 new FromValidator(params)
 // const titleConfig = {
